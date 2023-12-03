@@ -29,9 +29,9 @@ public class AtendimentoView {
         while (true) {
             try {
                 System.out.println("+= Atendimento =+");
-                System.out.println("1. Criar Ocorrência");
-                System.out.println("2. Consultar Ocorrência");
-                System.out.println("3. Atualizar Ocorrência");
+                System.out.println("1. Atender Ticket");
+                System.out.println("2. Consultar Ticket");
+                System.out.println("3. Atualizar Ticket");
                 System.out.println("4. Consultar Cliente");
                 System.out.println("5. Atualizar Cliente");
                 System.out.println("0. Sair");
@@ -39,11 +39,11 @@ public class AtendimentoView {
 
                 int opcao = Integer.parseInt(scanner.nextLine());
 
-                if (opcao == 1) {}
-                else if (opcao == 2) {}
-                else if (opcao == 3) {}
-                else if (opcao == 4) {}
-                else if (opcao == 5) {}
+                if (opcao == 1) { this.atenderTicket(); }
+                else if (opcao == 2) { this.consultarTicket(); }
+                else if (opcao == 3) { this.atualizarTicket(); }
+                else if (opcao == 4) { this.consultarCliente(); }
+                else if (opcao == 5) { this.atualizarCliente(); }
                 else if (opcao == 0) { break; }
 
             } catch (Exception e){
@@ -51,10 +51,35 @@ public class AtendimentoView {
             }
         }
 
-        // Encerra serviços
-        scanner.close();
-        ocorrenciaService.close();
-        clienteService.close();
+    }
+
+    private void atenderTicket(){
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Atendimento de Ticket");
+        System.out.print("Protocolo do Ticket: ");
+        String protocolo = scanner.nextLine();
+
+        // Consultar registro usando o service da Ticket
+        OcorrenciaService ocorrenciaService = new OcorrenciaService();
+        Ticket ticket = ocorrenciaService.consultar(protocolo);
+
+        if (ticket != null) {
+            // Imprimir resultado
+            System.out.println("Ticket atribuído para você!");
+            System.out.println("Protocolo: " + ticket.getProtocolo());
+            System.out.println("Tipo: " + ticket.getTipo());
+            System.out.println("Descrição: " + ticket.getDescricao());
+            System.out.println("Data: " + ticket.getData());
+            System.out.println("Status: " + ticket.getStatus());
+            System.out.println("Cliente: " + ticket.getCliente().getNome());
+            System.out.println("Atendente: " + this.atendente);
+
+            ticket.setAtendente(this.atendente);
+            ocorrenciaService.atualizar(ticket);
+        } else {
+            System.out.println("Ticket não encontrado.");
+        }
     }
 
     private void consultarTicket(){
@@ -64,7 +89,7 @@ public class AtendimentoView {
         System.out.print("Protocolo do Ticket: ");
         String protocolo = scanner.nextLine();
 
-        // Consultar registro usando o service da Ocorrência
+        // Consultar registro usando o service da Ticket
         OcorrenciaService ocorrenciaService = new OcorrenciaService();
         Ticket ticket = ocorrenciaService.consultar(protocolo);
 
@@ -76,7 +101,7 @@ public class AtendimentoView {
             System.out.println("Data: " + ticket.getData());
             System.out.println("Status: " + ticket.getStatus());
             System.out.println("Cliente: " + ticket.getCliente().getNome());
-            System.out.println("Atendente: " + ticket.getAtendente().getNome());
+            if (ticket.getAtendente() != null) System.out.println("Atendente: " + ticket.getAtendente().getNome());
         } else {
             System.out.println("Ticket não encontrado.");
         }
@@ -90,7 +115,7 @@ public class AtendimentoView {
         System.out.print("Protocolo do Ticket: ");
         String protocolo = scanner.nextLine();
 
-        // Consultar registro usando o service da Ocorrência
+        // Consultar registro usando o service da Ticket
         OcorrenciaService ocorrenciaService = new OcorrenciaService();
         Ticket ticket = ocorrenciaService.consultar(protocolo);
 
@@ -130,7 +155,7 @@ public class AtendimentoView {
 
             }
 
-            // Atualiza o registro usando o service da Ocorrência
+            // Atualiza o registro usando o service da Ticket
             ocorrenciaService.atualizar(ticket);
 
             System.out.println("Ticket atualizado com sucesso!");

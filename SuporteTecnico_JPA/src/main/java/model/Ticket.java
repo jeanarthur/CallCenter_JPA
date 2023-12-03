@@ -8,7 +8,6 @@ import java.util.Date;
 @Entity
 public class Ticket {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     String protocolo;
     @Column(name = "tipoticket")
     String tipo;

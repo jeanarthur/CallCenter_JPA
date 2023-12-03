@@ -19,28 +19,40 @@ public class ClienteService {
     }
 
     public void persistir(Cliente cliente){
+        this.open();
         entityManager.getTransaction().begin();
         entityManager.persist(cliente);
         entityManager.getTransaction().commit();
+        this.close();
     }
 
     public Cliente consultar(Long cpf){
+        this.open();
         entityManager.getTransaction().begin();
         Cliente cliente = entityManager.find(Cliente.class, cpf);
-        entityManager.getTransaction().rollback();
+        this.close();
         return cliente;
     }
 
+    public void open(){
+        entityManagerFactory = Persistence.createEntityManagerFactory("callcenter-jpa");
+        entityManager = entityManagerFactory.createEntityManager();
+    }
+
     public void atualizar(Cliente cliente){
+        this.open();
         entityManager.getTransaction().begin();
         entityManager.merge(cliente);
         entityManager.getTransaction().commit();
+        this.close();
     }
 
     public void deletar(Cliente cliente){
+        this.open();
         entityManager.getTransaction().begin();
         entityManager.remove(cliente);
         entityManager.getTransaction().commit();
+        this.close();
     }
 
     public void close(){

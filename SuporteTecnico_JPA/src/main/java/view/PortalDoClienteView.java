@@ -5,6 +5,8 @@ import model.Ticket;
 import service.ClienteService;
 import service.OcorrenciaService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -27,10 +29,10 @@ public class PortalDoClienteView {
     public void iniciar(){
         while (true) {
             try {
-                System.out.println("+= Atendimento =+");
-                System.out.println("1. Criar Ocorrência");
-                System.out.println("2. Consultar Ocorrência");
-                System.out.println("3. Atualizar Ocorrência");
+                System.out.println("+= Portal do Cliente =+");
+                System.out.println("1. Criar Ticket");
+                System.out.println("2. Consultar Ticket");
+                System.out.println("3. Atualizar Ticket");
                 System.out.println("4. Consultar Perfil");
                 System.out.println("5. Atualizar Perfil");
                 System.out.println("0. Sair");
@@ -49,17 +51,12 @@ public class PortalDoClienteView {
                 System.out.println("Operação inválida, tente novamente! " + e.getMessage());
             }
         }
-
-        // Encerra serviços
-        scanner.close();
-        ocorrenciaService.close();
-        clienteService.close();
     }
 
     private void criarTicket(){
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Criação de Ocorrência");
+        System.out.println("Criação de Ticket");
 
         //  solicita os dados do Ticket
         System.out.print("Tipo de ticket: ");
@@ -71,6 +68,8 @@ public class PortalDoClienteView {
 
         // Cria o Ticket
         Ticket ocorrencia = new Ticket();
+        LocalDateTime data = LocalDateTime.now();
+        ocorrencia.setProtocolo(String.format("%d%d%d-%d%d%d", data.getYear(), data.getMonthValue(), data.getDayOfMonth(), data.getHour(), data.getMinute(), data.getSecond()));
         ocorrencia.setTipo(tipo);
         ocorrencia.setDescricao(descricao);
         ocorrencia.setStatus(status);
@@ -105,7 +104,7 @@ public class PortalDoClienteView {
             System.out.println("Data: " + ticket.getData());
             System.out.println("Status: " + ticket.getStatus());
             System.out.println("Cliente: " + ticket.getCliente().getNome());
-            System.out.println("Atendente: " + ticket.getAtendente().getNome());
+            if (ticket.getAtendente() != null) System.out.println("Atendente: " + ticket.getAtendente().getNome());
         } else {
             System.out.println("Ticket não encontrado.");
         }
@@ -119,7 +118,7 @@ public class PortalDoClienteView {
         System.out.print("Protocolo do Ticket: ");
         String protocolo = scanner.nextLine();
 
-        // Consulta o registro usando o service da Ocorrência
+        // Consulta o registro usando o service da Ticket
         OcorrenciaService ocorrenciaService = new OcorrenciaService();
         Ticket ticket = ocorrenciaService.consultar(protocolo);
 
@@ -159,7 +158,7 @@ public class PortalDoClienteView {
 
             }
 
-            // Atualiza o registro usando o service da Ocorrência
+            // Atualiza o registro usando o service da Ticket
             ocorrenciaService.atualizar(ticket);
 
             System.out.println("Ticket atualizado com sucesso!");

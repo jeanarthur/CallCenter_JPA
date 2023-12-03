@@ -58,11 +58,6 @@ public class AdministracaoView {
             }
         }
 
-        // Encerra services
-        scanner.close();
-        atendenteService.close();
-        ocorrenciaService.close();
-        clienteService.close();
     }
 
     private void cadastrarAtendente(){
